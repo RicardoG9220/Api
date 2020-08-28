@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20200824142652_UserMigration")]
-    partial class UserMigration
+    [Migration("20200828222043_MigrationUser")]
+    partial class MigrationUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,21 +25,37 @@ namespace Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<DateTime?>("CreatAt")
+                    b.Property<DateTime?>("CreateAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .IsRequired()
+                        .HasColumnType("varchar(60) CHARACTER SET utf8mb4")
+                        .HasMaxLength(60);
 
                     b.Property<DateTime?>("UpdateAt")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("User");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f3e869ea-996b-46d9-8caa-954c6eb2b9c6"),
+                            CreateAt = new DateTime(2020, 8, 28, 19, 20, 43, 137, DateTimeKind.Local).AddTicks(1124),
+                            Email = "teste@email.com",
+                            Name = "teste1",
+                            UpdateAt = new DateTime(2020, 8, 28, 19, 20, 43, 138, DateTimeKind.Local).AddTicks(7842)
+                        });
                 });
 #pragma warning restore 612, 618
         }

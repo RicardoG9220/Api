@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -7,9 +8,8 @@ namespace Api.Data.Context
     {
         public MyContext CreateDbContext(string[] args)
         {
-            var connectionString = "Server=localhost;port=3306;Database=dbAPI;Uid=root;Pwd=ra135jx420";
             var optionsBuilder = new DbContextOptionsBuilder<MyContext>();
-            optionsBuilder.UseMySql(connectionString);
+            optionsBuilder.UseMySql(Environment.GetEnvironmentVariable("DB_CONNECTION"));
             return new MyContext(optionsBuilder.Options);
         }
     }

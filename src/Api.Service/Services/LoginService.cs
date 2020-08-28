@@ -50,12 +50,13 @@ namespace Api.Service.Services
                         new GenericIdentity(user.Email),
                         new[]
                         {
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), //jti O id do token
                     new Claim(JwtRegisteredClaimNames.UniqueName, user.Email),
                         }
                     );
                     DateTime createDate = DateTime.Now;
-                    DateTime expirationDate = createDate + TimeSpan.FromSeconds(_tokenConfigurations.Seconds);
+                    DateTime expirationDate = createDate + TimeSpan.FromSeconds(_tokenConfigurations.Seconds);  //60 segundos = 1 minuto
+
                     var handler = new JwtSecurityTokenHandler();
                     string token = CreateToken(identity, createDate, expirationDate, handler);
                     return SuccessObject(createDate, expirationDate, token, baseUser);
@@ -82,6 +83,7 @@ namespace Api.Service.Services
                 NotBefore = createDate,
                 Expires = expirationDate,
             });
+
             var token = handler.WriteToken(securityToken);
             return token;
         }
@@ -101,4 +103,3 @@ namespace Api.Service.Services
         }
     }
 }
-
