@@ -1,19 +1,20 @@
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Api.Domain.Interfaces.Services.User;
 using System;
 using System.Net;
-using Api.Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 using Api.Domain.Dtos.User;
+using Api.Domain.Entities;
+using Api.Domain.Interfaces.Services.User;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Application.Controllers
 {
+    //http://localhost:5000/api/users
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private IUserService _service;
+        public IUserService _service { get; set; }
         public UsersController(IUserService service)
         {
             _service = service;
@@ -21,15 +22,15 @@ namespace Api.Application.Controllers
 
         [Authorize("Bearer")]
         [HttpGet]
-        public async Task<ActionResult> GetAll([FromServices] IUserService service)
+        public async Task<ActionResult> GetAll()
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(ModelState);  // 400 Bad Request - Solicitação Inválida
             }
             try
             {
-                return Ok(await service.GetAll());
+                return Ok(await _service.GetAll());
             }
             catch (ArgumentException e)
             {
