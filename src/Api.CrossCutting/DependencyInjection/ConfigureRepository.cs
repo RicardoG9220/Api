@@ -4,7 +4,7 @@ using Api.Data.Implementations;
 using Api.Data.Repository;
 using Api.Domain.Interfaces;
 using Api.Domain.Interfaces.Repository;
-using Api.Domain.Security;
+using Api.Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,15 +17,21 @@ namespace Api.CrossCutting.DependencyInjection
             serviceCollection.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             serviceCollection.AddScoped<IUserRepository, UserImplementation>();
 
+            serviceCollection.AddScoped<IUfRepository, UfImplementation>();
+            serviceCollection.AddScoped<IMunicipioRepository, MunicipioImplementation>();
+            serviceCollection.AddScoped<ICepRepository, CepImplementation>();
+
             if (Environment.GetEnvironmentVariable("DATABASE").ToLower() == "SQLSERVER".ToLower())
             {
                 serviceCollection.AddDbContext<MyContext>(
-                options => options.UseSqlServer(Environment.GetEnvironmentVariable("DB_CONNECTION")));
+                    options => options.UseSqlServer(Environment.GetEnvironmentVariable("DB_CONNECTION"))
+                );
             }
             else
             {
                 serviceCollection.AddDbContext<MyContext>(
-                options => options.UseMySql(Environment.GetEnvironmentVariable("DB_CONNECTION")));
+                    options => options.UseMySql(Environment.GetEnvironmentVariable("DB_CONNECTION"))
+                );
             }
         }
     }
